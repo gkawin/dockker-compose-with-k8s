@@ -1,0 +1,31 @@
+version: "3"
+services: 
+  app:
+    container_name: "insurance-webapp"
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+    - .:/usr/src/app:rw
+
+  nginx:
+    restart: always
+    build: ./nginx/
+    ports:
+      - "80:80"
+    volumes:
+      - /www/public
+    links:
+      - app:app
+    
+  db:
+    image: mongo:latest
+    restart: always
+    container_name: "mongodb"
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
